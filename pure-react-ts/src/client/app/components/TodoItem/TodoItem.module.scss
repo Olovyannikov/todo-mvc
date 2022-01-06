@@ -1,0 +1,33 @@
+.item {
+  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px #ccc;
+
+  label {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 0;
+    cursor: pointer;
+
+    &.checked {
+      text-decoration: line-through;
+    }
+  }
+
+  button {
+    margin-left: auto;
+
+    &:hover {
+      svg {
+        color: darkred;
+      }
+    }
+  }
+
+
+}
