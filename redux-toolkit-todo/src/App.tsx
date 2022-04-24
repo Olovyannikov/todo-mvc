@@ -1,57 +1,39 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useTypedDispatch } from './hooks/useTypedDispatch';
+import { getTodos } from './store/models/todos/selectors';
+import { addTodo } from './store/models/todos';
 import { TodoControls } from './components/TodoControls';
-import { TodoItem } from './components/TodoItem';
+import { TodoItem, TodoItemProps } from './components/TodoItem';
 import { TodoList } from './components/TodoList';
-import { TodoType } from './types/todo.type';
 import './styles.css';
 
 function App() {
-    const [todos, setTodos] = useState<TodoType[]>([]);
+    const todos = useSelector(getTodos);
+    const dispatch = useTypedDispatch();
     const [text, setText] = useState<string>('');
 
-    const onAddTodoHandler = () => {
-        if (text.trim().length) {
-            setTodos([...todos, {
-                id: new Date().toISOString(), text, done: false
-            }]);
+    console.log(todos);
 
-            setText('');
-        }
-    }
+    const addTask = () => {
+        dispatch(addTodo({ text }));
+        setText('');
+    };
 
-    const onRemoveHandler = (id: number | string) => {
-        setTodos(todos.filter(todo => todo.id !== id));
-    }
-
-    const onToggleTodoHandler = (id: number | string) => {
-        setTodos(
-            todos.map(todo => {
-                if (todo.id !== id) return todo;
-
-                return {
-                    ...todo,
-                    done: !todo.done
-                }
-            })
-        )
-    }
-
-    return (<div className="App">
+    return (
+        <div className="App">
             <TodoControls
                 text={text}
-                onAddTodoHandler={onAddTodoHandler}
+                onAddTodoHandler={addTask}
                 setText={setText}
             />
 
             <TodoList>
-                {todos.map(todo =>
-                    <TodoItem
-                        onRemoveHandler={onRemoveHandler}
-                        onToggleTodoHandler={onToggleTodoHandler}
-                        {...todo}
-                    />)}
+                {todos.map((todo: TodoItemProps) =>
+                    <TodoItem key={todo.id} {...todo}/>)}
             </TodoList>
-        </div>);
+        </div>
+    );
 }
 
 export default App;

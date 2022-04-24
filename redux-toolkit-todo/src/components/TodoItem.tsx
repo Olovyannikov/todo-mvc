@@ -1,19 +1,21 @@
 import React from 'react';
+import { useTypedDispatch } from '../hooks/useTypedDispatch';
+import { removeTodo, toggleTodo } from '../store/models/todos/index';
 
 export interface TodoItemProps {
     id: number | string;
     done: boolean;
     text: string;
-    onToggleTodoHandler: (id: number | string) => void;
-    onRemoveHandler: (id: number | string) => void;
 }
 
-export const TodoItem = ({id, done, text, onToggleTodoHandler, onRemoveHandler}: TodoItemProps): JSX.Element => {
+export const TodoItem = ({id, done, text}: TodoItemProps): JSX.Element => {
+    const dispatch = useTypedDispatch();
+
     return (
-        <li>
-            <input type='checkbox' checked={done} onChange={() => onToggleTodoHandler(id)}/>
+        <li key={id}>
+            <input type='checkbox' checked={done} onChange={() => dispatch(toggleTodo({ id }))}/>
             <span>{ text }</span>
-            <button onClick={() => onRemoveHandler(id)}>Delete</button>
+            <button onClick={() => dispatch(removeTodo({ id }))}>Delete</button>
         </li>
     );
 };
